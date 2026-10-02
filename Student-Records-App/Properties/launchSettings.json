@@ -1,15 +1,4 @@
 {
-  /*
-   * Visual Studio launch profiles.
-   *
-   * "Demo (IIS Express)"  — runs the app locally with demo mode.
-   *                         No Azure services required. Uses in-memory DB
-   *                         and local file storage. Select this for daily dev.
-   *
-   * "Production (IIS)"    — runs against real Azure services.
-   *                         Requires Managed Identity and Key Vault configured.
-   *                         Use only when testing production integrations.
-   */
   "profiles": {
     "Demo (IIS Express)": {
       "commandName": "IISExpress",
@@ -29,17 +18,24 @@
     "Demo (Kestrel)": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:7001",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Demo"
-      }
+      },
+      "applicationUrl": "https://localhost:7001"
     },
     "Production (IIS)": {
       "commandName": "IIS",
-      "launchBrowser": false,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
       }
+    }
+  },
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:64101/",
+      "sslPort": 44393
     }
   }
 }
