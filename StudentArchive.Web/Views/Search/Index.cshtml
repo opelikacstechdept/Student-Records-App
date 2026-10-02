@@ -1,0 +1,168 @@
+@model StudentArchive.Web.ViewModels.SearchViewModel
+@{
+    ViewData["Title"] = "Search";
+}
+
+<div class="page-header">
+    <h1>Search files</h1>
+    <p class="page-subtitle">All filters are optional. Leave blank to search all records.</p>
+</div>
+
+@* Search form *@
+<div class="search-form-container">
+    <form asp-action="Index" method="post">
+        <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+        <div class="search-grid">
+            <div class="form-group">
+                <label asp-for="StudentNumber" class="form-label"></label>
+                <input asp-for="StudentNumber" class="form-input"
+                       placeholder="e.g. 1001001" autocomplete="off" />
+                <span asp-validation-for="StudentNumber" class="field-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="LastName" class="form-label"></label>
+                <input asp-for="LastName" class="form-input"
+                       placeholder="Partial match supported" autocomplete="off" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="FirstName" class="form-label"></label>
+                <input asp-for="FirstName" class="form-input"
+                       placeholder="Partial match supported" autocomplete="off" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DocumentType" class="form-label"></label>
+                <select asp-for="DocumentType" class="form-select"
+                        asp-items="Model.DocumentTypeOptions">
+                    <option value="">— All types —</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="AcademicYear" class="form-label"></label>
+                <select asp-for="AcademicYear" class="form-select"
+                        asp-items="Model.AcademicYearOptions">
+                    <option value="">— All years —</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Status" class="form-label"></label>
+                <select asp-for="Status" class="form-select"
+                        asp-items="Model.StatusOptions">
+                    <option value="">— All statuses —</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a asp-action="Index" class="btn btn-secondary">Clear</a>
+        </div>
+    </form>
+</div>
+
+@* Results *@
+@if (Model.HasSearched)
+{
+    <section class="results-section">
+        @if (Model.Results == null || !Model.Results.Items.Any())
+        {
+            <p class="empty-state">No files matched your search criteria.</p>
+        }
+        else
+        {
+            <div class="results-header">
+                <span class="results-count">
+                    @Model.Results.TotalCount result@(Model.Results.TotalCount == 1 ? "" : "s")
+                    — page @Model.Results.Page of @Model.Results.TotalPages
+                </span>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Student #</th>
+                        <th>Student name</th>
+                        <th>File name</th>
+                        <th>Document type</th>
+                        <th>Academic year</th>
+                        <th>Size</th>
+                        <th>Uploaded</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var result in Model.Results.Items)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-controller="Student" asp-action="Detail"
+                                   asp-route-studentNumber="@result.StudentNumber">
+                                    @result.StudentNumber
+                                </a>
+                            </td>
+                            <td>@result.StudentName</td>
+                            <td>@result.FileName</td>
+                            <td>@result.DocumentType</td>
+                            <td>@result.AcademicYear</td>
+                            <td>@result.FileSizeDisplay</td>
+                            <td>@result.UploadedAt.ToString("dd MMM yyyy")</td>
+                            <td>
+                                <a asp-controller="File" asp-action="Download"
+                                   asp-route-fileId="@result.FileId"
+                                   asp-route-studentNumber="@result.StudentNumber"
+                                   class="btn btn-sm btn-secondary">
+                                    Download
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            @* Pagination *@
+            @if (Model.Results.TotalPages > 1)
+            {
+                <div class="pagination">
+                    @if (Model.Results.HasPreviousPage)
+                    {
+                        <a asp-controller="Search" asp-action="Page"
+                           asp-route-page="@(Model.Results.Page - 1)"
+                           asp-route-studentNumber="@Model.StudentNumber"
+                           asp-route-firstName="@Model.FirstName"
+                           asp-route-lastName="@Model.LastName"
+                           asp-route-documentType="@Model.DocumentType"
+                           asp-route-academicYear="@Model.AcademicYear"
+                           asp-route-status="@Model.Status"
+                           class="btn btn-secondary">
+                            Previous
+                        </a>
+                    }
+
+                    <span class="pagination-info">
+                        Page @Model.Results.Page of @Model.Results.TotalPages
+                    </span>
+
+                    @if (Model.Results.HasNextPage)
+                    {
+                        <a asp-controller="Search" asp-action="Page"
+                           asp-route-page="@(Model.Results.Page + 1)"
+                           asp-route-studentNumber="@Model.StudentNumber"
+                           asp-route-firstName="@Model.FirstName"
+                           asp-route-lastName="@Model.LastName"
+                           asp-route-documentType="@Model.DocumentType"
+                           asp-route-academicYear="@Model.AcademicYear"
+                           asp-route-status="@Model.Status"
+                           class="btn btn-secondary">
+                            Next
+                        </a>
+                    }
+                </div>
+            }
+        }
+    </section>
+}

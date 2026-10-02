@@ -1,0 +1,54 @@
+@model StudentArchive.Web.ViewModels.AddStudentViewModel
+@{
+    ViewData["Title"] = "Add Student";
+}
+
+<div class="page-header">
+    <h1>Add student</h1>
+    <p class="page-subtitle">All fields are required. Student number must be 6–10 digits.</p>
+</div>
+
+<div class="form-container">
+    <form asp-action="Add" method="post">
+        <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+        <div class="form-group">
+            <label asp-for="StudentNumber" class="form-label"></label>
+            <input asp-for="StudentNumber" class="form-input"
+                   placeholder="e.g. 1001001" autocomplete="off" />
+            <span asp-validation-for="StudentNumber" class="field-error"></span>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label asp-for="FirstName" class="form-label"></label>
+                <input asp-for="FirstName" class="form-input" autocomplete="off" />
+                <span asp-validation-for="FirstName" class="field-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="LastName" class="form-label"></label>
+                <input asp-for="LastName" class="form-input" autocomplete="off" />
+                <span asp-validation-for="LastName" class="field-error"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Status" class="form-label"></label>
+            <select asp-for="Status" class="form-select"
+                    asp-items="@(new SelectList(AddStudentViewModel.StatusOptions))">
+                <option value="">— Select status —</option>
+            </select>
+            <span asp-validation-for="Status" class="field-error"></span>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Add student</button>
+            <a asp-controller="Search" asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

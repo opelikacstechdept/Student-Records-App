@@ -1,0 +1,19 @@
+@model StudentArchive.Web.ViewModels.ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="error-page">
+    <h1>Something went wrong</h1>
+    <p>
+        An unexpected error occurred while processing your request.
+        Please try again, or contact your administrator if the problem continues.
+    </p>
+    @if (Model?.ShowRequestId == true)
+    {
+        <p>Reference: <code>@Model.RequestId</code></p>
+    }
+    <a asp-controller="Search" asp-action="Index" class="btn btn-secondary">
+        Return to search
+    </a>
+</div>

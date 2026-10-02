@@ -1,0 +1,15 @@
+@{
+    ViewData["Title"] = "Access Denied";
+    Layout = "_Layout";
+}
+
+<div class="error-page">
+    <h1>Access denied</h1>
+    <p>
+        You do not have permission to access this page.
+        If you believe this is an error, please contact your administrator.
+    </p>
+    <a asp-controller="Search" asp-action="Index" class="btn btn-secondary">
+        Return to search
+    </a>
+</div>

@@ -1,0 +1,20 @@
+@{
+    ViewData["Title"] = "MFA Required";
+    Layout = "_Layout";
+}
+
+<div class="error-page">
+    <h1>Additional verification required</h1>
+    <p>
+        Your account must have multi-factor authentication (MFA) enabled
+        to access the Student Archive system.
+    </p>
+    <p>
+        Please contact your system administrator to register an MFA method
+        on your Microsoft account before attempting to sign in again.
+    </p>
+    <a asp-area="MicrosoftIdentity" asp-controller="Account"
+       asp-action="SignIn" class="btn btn-primary">
+        Return to sign in
+    </a>
+</div>

@@ -1,0 +1,94 @@
+@model StudentArchive.Web.ViewModels.StudentDetailViewModel
+@{
+    ViewData["Title"] = $"Student {Model.StudentNumber}";
+}
+
+<div class="page-header">
+    <div>
+        <h1>@Model.FullName</h1>
+        <p class="page-subtitle">Student #@Model.StudentNumber</p>
+    </div>
+
+    @if (User.IsInRole("Admin") || User.IsInRole("Uploader"))
+    {
+        <a asp-controller="File" asp-action="Upload"
+           asp-route-studentNumber="@Model.StudentNumber"
+           class="btn btn-primary">
+            Upload file
+        </a>
+    }
+</div>
+
+@* Student record card *@
+<div class="detail-card">
+    <div class="detail-row">
+        <span class="detail-label">Student number</span>
+        <span class="detail-value">@Model.StudentNumber</span>
+    </div>
+    <div class="detail-row">
+        <span class="detail-label">Status</span>
+        <span class="badge badge-@Model.Status.ToLower()">@Model.Status</span>
+    </div>
+    <div class="detail-row">
+        <span class="detail-label">Record created</span>
+        <span class="detail-value">@Model.CreatedAt.ToString("dd MMM yyyy")</span>
+    </div>
+</div>
+
+@* Files table *@
+<section class="section">
+    <h2>Files (@Model.Files.Count)</h2>
+
+    @if (!Model.Files.Any())
+    {
+        <p class="empty-state">No files have been uploaded for this student yet.</p>
+    }
+    else
+    {
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>File name</th>
+                    <th>Document type</th>
+                    <th>Academic year</th>
+                    <th>Size</th>
+                    <th>Uploaded</th>
+                    <th>Uploaded by</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var file in Model.Files)
+                {
+                    <tr>
+                        <td>@file.FileName</td>
+                        <td>@file.DocumentType</td>
+                        <td>@file.AcademicYear</td>
+                        <td>@file.FileSizeDisplay</td>
+                        <td>@file.UploadedAt.ToString("dd MMM yyyy HH:mm")</td>
+                        <td>@file.UploadedByUserName</td>
+                        <td class="action-cell">
+                            <a asp-controller="File" asp-action="Download"
+                               asp-route-fileId="@file.FileId"
+                               asp-route-studentNumber="@Model.StudentNumber"
+                               class="btn btn-sm btn-secondary">
+                                Download
+                            </a>
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <form asp-controller="File" asp-action="Delete"
+                                      method="post" class="inline-form"
+                                      data-confirm="Permanently delete this file?">
+                                    <input type="hidden" name="fileId" value="@file.FileId" />
+                                    <input type="hidden" name="studentNumber" value="@Model.StudentNumber" />
+                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</section>

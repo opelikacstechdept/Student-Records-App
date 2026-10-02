@@ -1,0 +1,96 @@
+@model StudentArchive.Web.ViewModels.FileUploadViewModel
+@{
+    ViewData["Title"] = "Upload File";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Upload file</h1>
+        <p class="page-subtitle">
+            For student: <strong>@Model.StudentName</strong>
+            (#@Model.StudentNumber)
+        </p>
+    </div>
+    <a asp-controller="Student" asp-action="Detail"
+       asp-route-studentNumber="@Model.StudentNumber"
+       class="btn btn-secondary">
+        Back to student
+    </a>
+</div>
+
+<div class="form-container">
+    <form asp-action="Upload" asp-route-studentNumber="@Model.StudentNumber"
+          method="post" enctype="multipart/form-data">
+
+        <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+        @* File picker *@
+        <div class="form-group">
+            <label asp-for="File" class="form-label"></label>
+            <input asp-for="File" type="file" class="form-input"
+                   accept=".pdf,.jpg,.jpeg,.png,.docx,.xlsx" />
+            <span class="form-hint">
+                Accepted: PDF, JPEG, PNG, Word, Excel. Maximum 50 MB.
+            </span>
+            <span asp-validation-for="File" class="field-error"></span>
+        </div>
+
+        @* Document type and academic year on the same row *@
+        <div class="form-row">
+            <div class="form-group">
+                <label asp-for="DocumentType" class="form-label"></label>
+                <select asp-for="DocumentType" class="form-select"
+                        asp-items="Model.DocumentTypeOptions">
+                    <option value="">— Select type —</option>
+                </select>
+                <span asp-validation-for="DocumentType" class="field-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="AcademicYear" class="form-label"></label>
+                <select asp-for="AcademicYear" class="form-select"
+                        asp-items="Model.AcademicYearOptions">
+                    <option value="">— Select year —</option>
+                </select>
+                <span asp-validation-for="AcademicYear" class="field-error"></span>
+            </div>
+        </div>
+
+        @* Optional metadata *@
+        <div class="form-row">
+            <div class="form-group">
+                <label asp-for="Semester" class="form-label"></label>
+                <select asp-for="Semester" class="form-select"
+                        asp-items="Model.SemesterOptions">
+                    <option value="">— Optional —</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Department" class="form-label"></label>
+                <input asp-for="Department" class="form-input"
+                       placeholder="e.g. Engineering" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Notes" class="form-label"></label>
+            <textarea asp-for="Notes" class="form-textarea" rows="3"
+                      placeholder="Optional notes about this file..."></textarea>
+            <span asp-validation-for="Notes" class="field-error"></span>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Upload file</button>
+            <a asp-controller="Student" asp-action="Detail"
+               asp-route-studentNumber="@Model.StudentNumber"
+               class="btn btn-secondary">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,65 @@
+@{
+    ViewData["Title"] = "Demo Login";
+    Layout = "_Layout";
+}
+
+<div class="page-header">
+    <h1>Demo login</h1>
+    <p class="page-subtitle">
+        Select a role to sign in. Each role has different permissions.
+    </p>
+</div>
+
+<div class="demo-login-container">
+    <div class="demo-banner demo-banner--inline">
+        This is a demo environment. No real authentication is performed.
+        All data is sample data stored in memory only.
+    </div>
+
+    <form method="post" asp-action="DemoLogin">
+        <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+        <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+
+        <div class="role-cards">
+
+            <label class="role-card">
+                <input type="radio" name="role" value="Admin" />
+                <div class="role-card-body">
+                    <h3>Admin</h3>
+                    <ul>
+                        <li>Add students</li>
+                        <li>Upload files</li>
+                        <li>Search and download</li>
+                        <li>Delete files</li>
+                    </ul>
+                </div>
+            </label>
+
+            <label class="role-card">
+                <input type="radio" name="role" value="Uploader" />
+                <div class="role-card-body">
+                    <h3>Uploader</h3>
+                    <ul>
+                        <li>Upload files</li>
+                        <li>Search and download</li>
+                    </ul>
+                </div>
+            </label>
+
+            <label class="role-card">
+                <input type="radio" name="role" value="Viewer" />
+                <div class="role-card-body">
+                    <h3>Viewer</h3>
+                    <ul>
+                        <li>Search and download only</li>
+                    </ul>
+                </div>
+            </label>
+
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Sign in as selected role</button>
+        </div>
+    </form>
+</div>

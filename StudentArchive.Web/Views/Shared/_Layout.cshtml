@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] — Student Archive</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+
+    @* Demo mode banner — only visible in Demo / Development environments *@
+    @if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") is "Demo" or "Development")
+    {
+        <div class="demo-banner">
+            DEMO MODE — In-memory database, local file storage. No Azure services active.
+        </div>
+    }
+
+    <header class="site-header">
+        <nav class="nav-container">
+            <a class="nav-brand" asp-controller="Home" asp-action="Index">
+                Student Archive
+            </a>
+
+            <ul class="nav-links">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li>
+                            <a asp-controller="Student" asp-action="Add">Add Student</a>
+                        </li>
+                    }
+                    <li>
+                        <a asp-controller="Search" asp-action="Index">Search</a>
+                    </li>
+                    <li class="nav-user">
+                        <span>@User.FindFirst("name")?.Value</span>
+                        <span class="nav-role">(@User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value)</span>
+                    </li>
+                    <li>
+                        @if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") is "Demo" or "Development")
+                        {
+                            <a asp-controller="Account" asp-action="DemoLogout">Sign out</a>
+                        }
+                        else
+                        {
+                            <a asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignOut">Sign out</a>
+                        }
+                    </li>
+                }
+            </ul>
+        </nav>
+    </header>
+
+    <main class="site-main">
+
+        @* Global success / error alerts from TempData *@
+        @if (TempData["Success"] is string success)
+        {
+            <div class="alert alert-success" role="alert">@success</div>
+        }
+        @if (TempData["Error"] is string error)
+        {
+            <div class="alert alert-error" role="alert">@error</div>
+        }
+
+        @RenderBody()
+
+    </main>
+
+    <footer class="site-footer">
+        <p>Student Archive &copy; @DateTime.UtcNow.Year — Internal use only</p>
+    </footer>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
