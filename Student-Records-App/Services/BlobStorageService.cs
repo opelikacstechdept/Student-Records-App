@@ -80,7 +80,7 @@ public class AzureBlobStorageService : IBlobStorageService
     public async Task<IEnumerable<string>> ListStudentBlobsAsync(string studentNumber)
     {
         var blobs = new List<string>();
-        await foreach (var blob in _container.GetBlobsAsync(prefix: $"{studentNumber}/"))
+        await foreach (var blob in _container.GetBlobsAsync(BlobTraits.None, BlobStates.None, prefix: $"{studentNumber}/", CancellationToken.None))
             blobs.Add(blob.Name);
         return blobs;
     }
